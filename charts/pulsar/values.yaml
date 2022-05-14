@@ -301,11 +301,11 @@ zookeeper:
   # If using Prometheus-Operator enable this PodMonitor to discover zookeeper scrape targets
   # Prometheus-Operator does not add scrape targets based on k8s annotations
   podMonitor:
-    enabled: false
+    enabled: true
     interval: 10s
     scrapeTimeout: 10s
   # True includes annotation for statefulset that contains hash of corresponding configmap, which will cause pods to restart on configmap change
-  restartPodsOnConfigMapChange: false
+  restartPodsOnConfigMapChange: true
   ports:
     http: 8000
     client: 2181
@@ -346,8 +346,8 @@ zookeeper:
   gracePeriod: 30
   resources:
     requests:
-      memory: 256Mi
-      cpu: 0.1
+      memory: 4Gi
+      cpu: 2
   # extraVolumes and extraVolumeMounts allows you to mount other volumes
   # Example Use Case: mount ssl certificates
   # extraVolumes:
@@ -384,7 +384,7 @@ zookeeper:
   ##
   configData:
     PULSAR_MEM: >
-      -Xms64m -Xmx128m
+      -Xms2048m -Xmx2048m
     PULSAR_GC: >
       -XX:+UseG1GC
       -XX:MaxGCPauseMillis=10
@@ -427,18 +427,18 @@ bookkeeper:
       # requests:
         # memory: 4Gi
         # cpu: 2
-  replicaCount: 4
+  replicaCount: 20
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: Parallel
   # If using Prometheus-Operator enable this PodMonitor to discover bookie scrape targets
   # Prometheus-Operator does not add scrape targets based on k8s annotations
   podMonitor:
-    enabled: false
+    enabled: true
     interval: 10s
     scrapeTimeout: 10s
   # True includes annotation for statefulset that contains hash of corresponding configmap, which will cause pods to restart on configmap change
-  restartPodsOnConfigMapChange: false
+  restartPodsOnConfigMapChange: true
   ports:
     http: 8000
     bookie: 3181
@@ -474,8 +474,8 @@ bookkeeper:
   gracePeriod: 30
   resources:
     requests:
-      memory: 512Mi
-      cpu: 0.2
+      memory: 8Gi
+      cpu: 4
   # extraVolumes and extraVolumeMounts allows you to mount other volumes
   # Example Use Case: mount ssl certificates
   # extraVolumes:
@@ -551,9 +551,9 @@ bookkeeper:
   configData:
     # we use `bin/pulsar` for starting bookie daemons
     PULSAR_MEM: >
-      -Xms128m
-      -Xmx256m
-      -XX:MaxDirectMemorySize=256m
+      -Xms6000m
+      -Xmx6000m
+      -XX:MaxDirectMemorySize=512m
     PULSAR_GC: >
       -XX:+UseG1GC
       -XX:MaxGCPauseMillis=10
@@ -604,11 +604,11 @@ autorecovery:
   # If using Prometheus-Operator enable this PodMonitor to discover autorecovery scrape targets
   # # Prometheus-Operator does not add scrape targets based on k8s annotations
   podMonitor:
-    enabled: false
+    enabled: true
     interval: 10s
     scrapeTimeout: 10s
   # True includes annotation for statefulset that contains hash of corresponding configmap, which will cause pods to restart on configmap change
-  restartPodsOnConfigMapChange: false
+  restartPodsOnConfigMapChange: true
   ports:
     http: 8000
   # nodeSelector:
@@ -667,20 +667,20 @@ broker:
   # use a component name that matches your grafana configuration
   # so the metrics are correctly rendered in grafana dashboard
   component: broker
-  replicaCount: 3
+  replicaCount: 10
   autoscaling:
     enabled: false
     minReplicas: 1
-    maxReplicas: 3
+    maxReplicas: 10
     metrics: ~
   # If using Prometheus-Operator enable this PodMonitor to discover broker scrape targets
   # Prometheus-Operator does not add scrape targets based on k8s annotations
   podMonitor:
-    enabled: false
+    enabled: true
     interval: 10s
     scrapeTimeout: 10s
   # True includes annotation for statefulset that contains hash of corresponding configmap, which will cause pods to restart on configmap change
-  restartPodsOnConfigMapChange: false
+  restartPodsOnConfigMapChange: true
   ports:
     http: 8080
     https: 8443
@@ -718,8 +718,8 @@ broker:
   gracePeriod: 30
   resources:
     requests:
-      memory: 512Mi
-      cpu: 0.2
+      memory: 8Gi
+      cpu: 8
   # extraVolumes and extraVolumeMounts allows you to mount other volumes
   # Example Use Case: mount ssl certificates
   # extraVolumes:
@@ -738,7 +738,7 @@ broker:
   ##
   configData:
     PULSAR_MEM: >
-      -Xms128m -Xmx256m -XX:MaxDirectMemorySize=256m
+      -Xms6000m -Xmx6000m -XX:MaxDirectMemorySize=512m
     PULSAR_GC: >
       -XX:+UseG1GC
       -XX:MaxGCPauseMillis=10
@@ -797,7 +797,7 @@ proxy:
   # If using Prometheus-Operator enable this PodMonitor to discover proxy scrape targets
   # Prometheus-Operator does not add scrape targets based on k8s annotations
   podMonitor:
-    enabled: false
+    enabled: true
     interval: 10s
     scrapeTimeout: 10s
   # True includes annotation for statefulset that contains hash of corresponding configmap, which will cause pods to restart on configmap change
@@ -1056,8 +1056,8 @@ grafana:
   gracePeriod: 30
   resources:
     requests:
-      memory: 250Mi
-      cpu: 0.1
+      memory: 1Gi
+      cpu: 1
   ## Grafana service
   ## templates/grafana-service.yaml
   ##
@@ -1109,8 +1109,8 @@ pulsar_manager:
   gracePeriod: 30
   resources:
     requests:
-      memory: 250Mi
-      cpu: 0.1
+      memory: 1Gi
+      cpu: 1
   configData:
     REDIRECT_HOST: "http://127.0.0.1"
     REDIRECT_PORT: "9527"
