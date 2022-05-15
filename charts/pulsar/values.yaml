@@ -24,8 +24,8 @@
 ### Namespace to deploy pulsar
 # The namespace to use to deploy the pulsar components, if left empty
 # will default to .Release.Namespace (aka helm --namespace).
-namespace: ""
-namespaceCreate: false
+namespace: "lx-pulsar"
+namespaceCreate: true
 
 ## clusterDomain as defined for your k8s cluster
 clusterDomain: cluster.local
@@ -125,7 +125,7 @@ components:
   # toolset
   toolset: true
   # pulsar manager
-  pulsar_manager: false
+  pulsar_manager: true
 
 ## Monitoring Components
 ##
@@ -370,15 +370,15 @@ zookeeper:
       local_storage: true
       ## If you already have an existent storage class and want to reuse it, you can specify its name with the option below
       ##
-      # storageClassName: existent-storage-class
+      storageClassName: pulsar
       #
       ## Instead if you want to create a new storage class define it below
       ## If left undefined no storage class will be defined along with PVC
       ##
-      # storageClass:
-        # type: pd-ssd
-        # fsType: xfs
-        # provisioner: kubernetes.io/gce-pd
+      #storageClass:
+        #type: pd-ssd
+        #fsType: ext4
+        #provisioner: com.tencent.cloud.csi.cbs
   ## Zookeeper configmap
   ## templates/zookeeper-configmap.yaml
   ##
@@ -494,11 +494,11 @@ bookkeeper:
     persistence: true
     journal:
       name: journal
-      size: 10Gi
+      size: 256Gi
       local_storage: true
       ## If you already have an existent storage class and want to reuse it, you can specify its name with the option below
       ##
-      # storageClassName: existent-storage-class
+      storageClassName: pulsar
       #
       ## Instead if you want to create a new storage class define it below
       ## If left undefined no storage class will be defined along with PVC
@@ -507,31 +507,31 @@ bookkeeper:
         # type: pd-ssd
         # fsType: xfs
         # provisioner: kubernetes.io/gce-pd
-      useMultiVolumes: false
+      useMultiVolumes: true
       multiVolumes:
         - name: journal0
-          size: 10Gi
+          size: 128Gi
           # storageClassName: existent-storage-class
           mountPath: /pulsar/data/bookkeeper/journal0
         - name: journal1
-          size: 10Gi
+          size: 128Gi
           # storageClassName: existent-storage-class
           mountPath: /pulsar/data/bookkeeper/journal1
     ledgers:
       name: ledgers
-      size: 50Gi
+      size: 256Gi
       local_storage: true
-      # storageClassName:
+      storageClassName: pulsar
       # storageClass:
         # ...
-      useMultiVolumes: false
+      useMultiVolumes: true
       multiVolumes:
         - name: ledgers0
-          size: 10Gi
+          size: 128Gi
           # storageClassName: existent-storage-class
           mountPath: /pulsar/data/bookkeeper/ledgers0
         - name: ledgers1
-          size: 10Gi
+          size: 128Gi
           # storageClassName: existent-storage-class
           mountPath: /pulsar/data/bookkeeper/ledgers1
 
@@ -541,7 +541,7 @@ bookkeeper:
       name: common
       size: 60Gi
       local_storage: true
-      # storageClassName:
+      storageClassName: pulsar
       # storageClass: ## this is common too
         # ...
 
@@ -887,7 +887,7 @@ proxy:
   ## templates/proxy-ingress.yaml
   ##
   ingress:
-    enabled: false
+    enabled: true
     annotations: {}
     tls:
       enabled: false
@@ -1026,7 +1026,7 @@ prometheus:
       local_storage: true
       ## If you already have an existent storage class and want to reuse it, you can specify its name with the option below
       ##
-      # storageClassName: existent-storage-class
+      storageClassName: pulsar
       #
       ## Instead if you want to create a new storage class define it below
       ## If left undefined no storage class will be defined along with PVC
